@@ -1,0 +1,205 @@
+
+//update validateFormState for  PropertyAssessmentForm
+
+function validateFormState() { 
+
+
+//Validate that the state belongs to the country 
+
+var USAConstant = "UNITED STATES"; 
+
+var CanadaConstant = "CANADA"; 
+
+var participantCountry = trim(Ext.getCmp('countryComp').getValue().toUpperCase()); 
+
+var listOfStates; 
+
+var listOfProvinces; 
+
+ 
+ 
+
+ 
+
+listOfStates = [ "AA","AE","AK","AL","AP","AR","AS","AZ","CA","CO","CT","DC","DE","FL","GA","GU","HI","IA","ID","IL","IN","KS","KY","LA","MA","MD","ME","MI","MN","MO","MP","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY","OH","OK","OR","PA","PR","RI","SC","SD","TN","TX","UT","VA","VI","VT","WA","WI","WV","WY" ]; 
+
+ 
+
+ 
+ 
+
+ 
+
+listOfProvinces = [ "AB","BC","MB","NB","NL","NS","NT","NU","ON","PE","QC","SK","YT" ]; 
+
+ 
+ 
+
+var foundStateProvince = "false"; 
+
+if ( participantCountry == USAConstant.toUpperCase()) { 
+
+ 
+ 
+
+for(var x=0; x<listOfStates.length; x++){ 
+
+ 
+ 
+
+if (listOfStates[x].toUpperCase() == document.forms['perNote'].state.value.toUpperCase()) { 
+
+foundStateProvince = "true"; 
+
+} 
+
+} 
+
+} else if ( participantCountry == CanadaConstant.toUpperCase()) { 
+
+for(var x=0; x<listOfProvinces.length; x++){ 
+
+ 
+ 
+
+if (listOfProvinces[x].toUpperCase() == document.forms['perNote'].state.value.toUpperCase()) { 
+
+foundStateProvince = "true"; 
+
+} 
+
+} 
+
+} 
+
+ 
+ 
+
+if ( foundStateProvince == "false" && 
+
+(participantCountry == USAConstant.toUpperCase() || participantCountry == CanadaConstant.toUpperCase()) ) { 
+
+return false; 
+
+} else { 
+
+return true; 
+
+} 
+
+} 
+
+
+
+
+
+
+//Using re.findall to create a new column in a dataframe without brackets 
+
+ 
+file1['ID'] = file1['ID'].apply(lambda x:x[0]) 
+ 
+
+def return_correct(found): 
+ 
+
+  if len(found)>0: 
+return found[0] 
+ 
+
+  return None 
+ 
+IDs.append(return_correct(re.findall(' [a-zA-Z]+\d+$',i))) 
+
+
+
+
+//extract data from worksheet
+
+import openpyxl 
+
+  
+
+def readData(file,sheetname,rownum,colnum): 
+
+    workbook = openpyxl.load_workbook(file) 
+
+    sheet =  workbook[sheetname] 
+
+    inputvalue =sheet.cell(row=rownum, column=colnum).value 
+
+    return inputvalue 
+
+  
+
+def writeData(file,sheetname,rownum, colnum,data): 
+
+    workbook = openpyxl.load_workbook(file) 
+
+    sheet = workbook[sheetname] 
+
+    sheet.cell(row=rownum, column=colnum).value= data 
+
+    workbook.save(file) 
+
+ 
+
+ 
+
+Note: Install Selenium libraries in your IDE, You cannot execute the code without that. pip install Selenium command is used to install Selenium libraries. 
+
+from openpyxl import load_workbook 
+
+from selenium import webdriver 
+
+from ExcelTest import ExcelUtils 
+
+driver=webdriver.Chrome\ 
+
+    (r"C:\Users\Admin\PycharmProjects\SeleniumTest\Drivers\chromedriver.exe") 
+
+driver.get("https://www.facebook.com/") 
+
+driver.maximize_window() 
+
+file = "InputData.xlsx" 
+
+wb = load_workbook(file) 
+
+sheet=wb.active 
+
+row_count = sheet.max_row 
+
+col_count = sheet.max_column 
+
+for r in range(2,row_count+1): 
+
+    email= ExcelUtils.readData(file, "Sheet1", r, 1) 
+
+    password = ExcelUtils.readData(file, "Sheet1", r, 2) 
+
+    driver.find_element_by_id("email").send_keys(email) 
+
+    driver.find_element_by_id("pass").send_keys(password) 
+
+    driver.find_element_by_id("u_0_b").click() 
+
+    time.sleep(6) 
+
+    pagetitle=driver.title 
+
+    print(pagetitle) 
+
+    if pagetitle=="Facebook": 
+
+        ExcelUtils.writeData(file,"Sheet1",r,5,"Passed") 
+
+    else: 
+
+        ExcelUtils.writeData(file,"Sheet1",r,4,pagetitle) 
+
+        ExcelUtils.writeData(file,"Sheet1",r,5,"Failed") 
+
+driver.find_element_by_xpath\ 
+
+    ("//*[@id='blueBarDOMInspector']/div/div[1]/div/div/h1/a/i").click() 
